@@ -84,10 +84,10 @@ def parse_abstract(result, logfile, PMID):
     
     # Skip records with no abstract
     if 'Abstract' not in result['MedlineCitation']['Article'].keys():
-        logfile.write(f'WARNING: Skipping {PMID}: Abstract key not in record\n')
+        logfile.write(f'WARNING: {PMID}: Abstract key not in record\n')
         return ''
     if 'AbstractText' not in result['MedlineCitation']['Article']['Abstract'].keys():
-        logfile.write(f'WARNING: Skipping {PMID}: AbstractText key not in record\n')
+        logfile.write(f'WARNING: {PMID}: AbstractText key not in record\n')
         return ''
     
     abstract = result['MedlineCitation']['Article']['Abstract']['AbstractText']
@@ -133,7 +133,7 @@ def get_PMC(article):
 def get_mesh_dict(result, logfile, PMID):
     # Parse Qualifiers and Descriptors
     if 'MeshHeadingList' not in result['MedlineCitation']:
-        logfile.write(f"{PMID} does not has MeshHeadingList key in XML, unable to parse it\n")
+        logfile.write(f"{PMID} does not has MeshHeadingList key in XML, unable to parse MeSH\n")
         return set(),set()
     
     qualifiers = []
@@ -142,7 +142,7 @@ def get_mesh_dict(result, logfile, PMID):
     for msh in result['MedlineCitation']['MeshHeadingList']:
         # Parse Qualifiers
         if type(msh['QualifierName']) != list:
-            logfile.write(f"{PMID} has Qualifiers not properly saved, unable to parse it\n")
+            logfile.write(f"{PMID} has Qualifiers not properly saved, unable to parse MeSH\n")
             return set(),set()
         qs = msh['QualifierName']
         if len(qs)>0:
@@ -151,13 +151,28 @@ def get_mesh_dict(result, logfile, PMID):
                 
         # Parse Descriptors
         if type(msh['DescriptorName']) == list:
-            logfile.write(f"{PMID} has Descriptors not properly saved, unable to parse it\n")
+            logfile.write(f"{PMID} has Descriptors not properly saved, unable to parse MeSH\n")
             return set(),set()
         descriptors.append(msh['DescriptorName'].attributes['UI'])
            
     return set(qualifiers), set(descriptors)
         
-            
+def parse_lang(article, PMID):
+
+    if 'Article' not in article['MedlineCitation'].keys():
+        return ''
+
+    if 'Language' not in article['MedlineCitation']['Article']:
+        return ''
+    
+    lang = article['MedlineCitation']['Article']['Language']
+    if len(lang) == 0:
+        return ''
+    if len(lang) > 1:
+        return ','.join(lang)
+
+    return lang[0]
+
 def get_full_records(base_path, setsv2, logfile):
     
     c = 0
@@ -183,6 +198,8 @@ def get_full_records(base_path, setsv2, logfile):
             title = result['MedlineCitation']['Article']['ArticleTitle'].strip()
             # Get MeSH terms
             qualifiers, descriptors = get_mesh_dict(result, logfile, PMID)
+            # Get language
+            lang = parse_lang(result, PMID)
             # Get Abstract
             abstract_str = parse_abstract(result, logfile, PMID)
                 
@@ -190,7 +207,7 @@ def get_full_records(base_path, setsv2, logfile):
             abstract_str = basic_text_cleaning(abstract_str, _RE_COMBINE_WHITESPACE)
             title = basic_text_cleaning(title, _RE_COMBINE_WHITESPACE)
             
-            fout.write(f"{PMID}\t{title}\t{abstract_str}\t{PMC}\t{','.join(sorted(qualifiers))}\t{','.join(sorted(descriptors))}\n")
+            fout.write(f"{PMID}\t{title}\t{abstract_str}\t{PMC}\t{','.join(sorted(qualifiers))}\t{','.join(sorted(descriptors))}\t{lang}\n")
             
         fout.close()
 
