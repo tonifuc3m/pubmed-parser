@@ -1,4 +1,4 @@
-# biocreative-background-set-pipeline <img src="images/biocreative-logo.png" alt="Logo" align="right"  width="150" height="150">
+# biocreative-background-set-pipeline <img src="images/biocreative-logo.jpeg" alt="Logo" align="right"  width="150" height="150">
 
 <p align="left">
     Library to download PubMed abstracts with metadata. Originally created to obtain the DrugProt (BioCreative VII) background set.
