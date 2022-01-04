@@ -219,11 +219,11 @@ def argparser():
     
     parser = argparse.ArgumentParser(description='process user given parameters')
     parser.add_argument("-i", "--input", required = True, dest = "input", 
-                        help = "path to input set")
+                        help = "path to input set in fetch mode. Basepath (path were the queries file and the output folder are) in search_pmids mode")
     parser.add_argument("-o", "--output", required =  True, dest="output", 
-                        help = "path to output folder")
+                        help = "path to output folder in fetch mode. Name of file with PubMed queries in search_pmids mode")
     parser.add_argument("-l", "--logfile", required =  True, dest="logfile", 
-                help = "logfilepath")
+                help = "path to logfile")
     args = parser.parse_args()
 
     

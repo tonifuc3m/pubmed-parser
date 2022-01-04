@@ -1,0 +1,3 @@
+(receptors, drug[MeSH Terms])
+(antiviral agents[MeSH Terms])
+( "Blood Proteins/abnormalities"[Mesh] OR "Blood Proteins/adverse effects"[Mesh] OR "Blood Proteins/agonists"[Mesh] OR "Blood Proteins/analogs and derivatives"[Mesh] OR "Blood Proteins/antagonists and inhibitors"[Mesh] OR "Blood Proteins/drug effects"[Mesh] OR "Blood Proteins/enzymology"[Mesh] OR "Blood Proteins/genetics"[Mesh] OR "Blood Proteins/metabolism"[Mesh] OR "Blood Proteins/pharmacology"[Mesh] OR "Blood Proteins/toxicity"[Mesh] )
